@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //gets X of mouse and roatates the target
         float horizontal = Input.GetAxis("Mouse X") * cameraRotateSpeed;
@@ -66,9 +66,11 @@ public class CameraController : MonoBehaviour
         RaycastHit wallHit = new RaycastHit();
         if (Physics.Linecast(target.position, transform.position, out wallHit))
         {
+            //print("Hitting" + wallHit.collider.name);
             Debug.DrawLine(transform.position, target.position, Color.green);
-            if (wallHit.collider.tag != "Collectible")
+            if (wallHit.collider.tag != "Player")
             {
+                print("Adjusting because of " + wallHit.collider.name);
                 transform.position = new Vector3(wallHit.point.x, wallHit.point.y, wallHit.point.z) + wallHit.normal;
             }
         }

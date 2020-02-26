@@ -22,18 +22,22 @@ public class InventoryScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //equip sword
         if (Input.GetKeyDown(KeyCode.Alpha1) && !swordEquipped)
         {
-            print("Yep");swordGO = Instantiate(sword) as GameObject;
+            swordGO = Instantiate(sword) as GameObject;
             swordGO.transform.SetParent(hand.transform);
             swordGO.transform.localPosition = swordPosition;
             swordGO.transform.localEulerAngles = swordRotation;
             swordEquipped = true;
         }
+        //remove sword (or current item in future)
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Destroy(swordGO);
             swordEquipped = false;
         }
     }
+
+    public bool IsSwordEquipped() { return swordEquipped; }
 }
