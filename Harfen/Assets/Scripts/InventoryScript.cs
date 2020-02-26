@@ -11,6 +11,7 @@ public class InventoryScript : MonoBehaviour
     public GameObject hand;
 
     private bool swordEquipped = false;
+    private GameObject swordGO;
 
     // Start is called before the first frame update
     void Start()
@@ -23,11 +24,16 @@ public class InventoryScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && !swordEquipped)
         {
-            GameObject swordGO = Instantiate(sword) as GameObject;
+            print("Yep");swordGO = Instantiate(sword) as GameObject;
             swordGO.transform.SetParent(hand.transform);
             swordGO.transform.localPosition = swordPosition;
-            swordGO.transform.eulerAngles = swordRotation;
+            swordGO.transform.localEulerAngles = swordRotation;
             swordEquipped = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Destroy(swordGO);
+            swordEquipped = false;
         }
     }
 }
