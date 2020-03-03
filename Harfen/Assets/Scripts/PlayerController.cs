@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float playerSpeed;
 
     private bool currentlyAttacking = false;
+    private bool currentlyCasting = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,16 +26,25 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsSwordEquipped())
         {
-            print("Settig true");
             currentlyAttacking = true;
             this.GetComponent<Animator>().Play("Sword Stab");
+        }
+        else if(Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsMagicEquipped())
+        {
+            currentlyCasting = true;
+            this.GetComponent<Animator>().Play("Magic");
         }
         if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
         {
             currentlyAttacking = false;
         }
+        /*else if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Magic"))
+        {
+            currentlyCasting = false;
+        }*/
     }
 
     public bool IsCurrentlyAttacking() { return currentlyAttacking; }
+    public bool IsCurrentlyCasting() { return currentlyCasting; }
 
 }
