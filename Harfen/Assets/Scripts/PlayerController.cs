@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
 
     public float playerSpeed;
+    public GameObject magicOrigin;
+    public float maxMagicDistance;
 
     private bool currentlyAttacking = false;
     private bool currentlyCasting = false;
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour
         {
             currentlyCasting = true;
             this.GetComponent<Animator>().Play("Magic");
+            
         }
         if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
         {
@@ -46,5 +49,18 @@ public class PlayerController : MonoBehaviour
 
     public bool IsCurrentlyAttacking() { return currentlyAttacking; }
     public bool IsCurrentlyCasting() { return currentlyCasting; }
+
+    private void CastSpell()
+    {
+
+        /*RaycastHit spell = new RaycastHit();
+        if(Physics.Linecast(magicOrigin.transform, mouse.transform, out spell)){
+            Debug.DrawLine(transform.position, mouse.position, Color.green);
+            if(spell.collider.tag == "Enemy" && spell.distance < maxMagicDistance)
+            {
+                print("Spell Hit");
+            }
+        }*/
+    }
 
 }

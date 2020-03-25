@@ -30,7 +30,7 @@ public class InventoryScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //remove sword (or current item in future)
         if (Input.GetKeyDown(KeyCode.Q))
@@ -48,13 +48,14 @@ public class InventoryScript : MonoBehaviour
             //don't spawn two swords
             if (swordGO != null) { Destroy(swordGO); }
             //if magic "anim" is still playing
-            if (magicEquipped) { this.GetComponent<Animator>().Play("Idle"); }
+            //if (magicEquipped) { this.GetComponent<Animator>().Play("Idle"); }
 
             //instantiate sword at hand
             swordGO = Instantiate(sword) as GameObject;
             swordGO.transform.SetParent(hand.transform);
             swordGO.transform.localPosition = swordPosition;
             swordGO.transform.localEulerAngles = swordRotation;
+            swordGO.GetComponent<SwordScript>().player = this.gameObject;
 
             //set bools/UI
             swordEquipped = true;
@@ -67,7 +68,7 @@ public class InventoryScript : MonoBehaviour
             //Destroy sword if it exists
             if (swordGO != null) { Destroy(swordGO); }
             //play magic "anim"
-            this.GetComponent<Animator>().Play("Magic");
+            //this.GetComponent<Animator>().Play("Magic");
 
             //set bools/UI
             swordEquipped = false;
@@ -84,9 +85,10 @@ public class InventoryScript : MonoBehaviour
                 swordGO.transform.SetParent(hand.transform);
                 swordGO.transform.localPosition = swordPosition;
                 swordGO.transform.localEulerAngles = swordRotation;
+                swordGO.GetComponent<SwordScript>().player = this.gameObject;
             }
             //if magic "anim" is still playing
-            if (magicEquipped) { this.GetComponent<Animator>().Play("Idle"); }
+            //if (magicEquipped) { this.GetComponent<Animator>().Play("Idle"); }
 
             //set bools/UI
             swordEquipped = false;

@@ -19,12 +19,8 @@ public class EnemyScript : MonoBehaviour
         
     }
 
-    void OnCollisionEnter(Collision collision)
+    public void Kill()
     {
-        if (player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab")
-            && collision.gameObject.tag == "Sword")
-        {
-            Destroy(this.gameObject);
-        }
+        Destroy(this.gameObject);
     }
 }
