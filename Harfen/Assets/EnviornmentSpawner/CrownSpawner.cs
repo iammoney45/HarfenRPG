@@ -12,18 +12,34 @@ public class CrownSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     	if(numSpawned < 50){
+     	if(numSpawned < 100){
      		Spawn(Grass);
      		numSpawned++;
      	}
     }
 
     void Spawn(GameObject spawn){
-    	float posX = Random.Range(-5.0f, 5.0f);
-    	float posY = Random.Range(-5.0f, 5.0f);
-    	float posZ = Random.Range(-5.0f, 5.0f);
-    	Vector3 NewPos = new Vector3(posX,posY,posZ);
-    	GameObject spawny = Instantiate(spawn, PlayerTransform.position + NewPos, Quaternion.Euler(new Vector3(Random.Range(0f,360f),Random.Range(0f,360f),Random.Range(0f,360f))));
+    	//print("spawning");
+    	int layerMask = 1 << 8;
+    	layerMask = ~layerMask;
+    	RaycastHit hit;
+    	Vector3 targetPoint = PlayerTransform.position;
+    	float posX = Random.Range(-8.0f, 8.0f);
+    	float posZ = Random.Range(-8.0f, 8.0f);
+    	
+    	//print(targetPoint);
+    	if(Physics.Raycast(PlayerTransform.position, transform.TransformDirection(Vector3.down), out hit, 50, layerMask)){
+
+    	}
+    	else{
+    		print("no hit");
+    	}
+    	Vector3 NewPos = hit.point;
+    	NewPos.x += posX;
+    	NewPos.z += posZ;
+    	NewPos.y += 5;
+    	//print(NewPos);
+    	GameObject spawny = Instantiate(spawn, NewPos, Quaternion.Euler(new Vector3(0,0,0)));
     	//spawny.GetComponent<SuicideForObjects>().player = PlayerTransform;
     	//spawny.GetComponent<SuicideForObjects>().daddyScript = this;
     	spawny.GetComponent<SuicideForObjects>().player = this.gameObject;
