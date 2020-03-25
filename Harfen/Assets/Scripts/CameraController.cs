@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     public Transform pivot;
     public float maxViewAngle;
     public float minViewAngle;
+    public Transform lookAtTarget;
 
     private Quaternion rotation;
     private Vector3 startPos;
@@ -27,7 +28,7 @@ public class CameraController : MonoBehaviour
         pivot.transform.parent = target.transform;
         Cursor.lockState = CursorLockMode.Locked;
 
-        transform.LookAt(target);
+        transform.LookAt(lookAtTarget);
     }
 
     // Update is called once per frame
@@ -64,7 +65,6 @@ public class CameraController : MonoBehaviour
         RaycastHit wallHit = new RaycastHit();
         if (Physics.Linecast(target.position, transform.position, out wallHit))
         {
-            //print("Hitting" + wallHit.collider.name);
             Debug.DrawLine(transform.position, target.position, Color.green);
             if (wallHit.collider.tag != "Player")
             {
@@ -73,6 +73,6 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        transform.LookAt(target);
+        transform.LookAt(lookAtTarget);
     }
 }
