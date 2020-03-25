@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Sword
   - Enemy
+  - Grass
   layers:
   - Default
   - TransparentFX
