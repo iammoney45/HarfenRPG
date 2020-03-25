@@ -8,14 +8,19 @@ public class PlayerController : MonoBehaviour
     public float playerSpeed;
     public GameObject magicOrigin;
     public float maxMagicDistance;
+    public Camera mainCamera;
+    public float lineDestoryTime;
 
     private bool currentlyAttacking = false;
     private bool currentlyCasting = false;
+    private LineRenderer spellLine;
+    private IEnumerator lineDestroyCoroutine;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        spellLine = GetComponent<LineRenderer>();
+        spellLine.enabled = false;
     }
 
     // Update is called once per frame
@@ -34,7 +39,7 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsMagicEquipped())
         {
             currentlyCasting = true;
-            this.GetComponent<Animator>().Play("Magic");
+            StartCoroutine("WaitForSpell");
             
         }
         if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
@@ -52,15 +57,37 @@ public class PlayerController : MonoBehaviour
 
     private void CastSpell()
     {
-
-        /*RaycastHit spell = new RaycastHit();
-        if(Physics.Linecast(magicOrigin.transform, mouse.transform, out spell)){
-            Debug.DrawLine(transform.position, mouse.position, Color.green);
+        RaycastHit spell;
+        spellLine.SetPosition(0, magicOrigin.transform.position);
+        spellLine.enabled = true;
+        Vector3 rayOrgin = mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        if(Physics.Raycast(magicOrigin.transform.position, transform.forward, out spell, maxMagicDistance)){
+            Debug.DrawLine(magicOrigin.transform.position, transform.forward, Color.green);
             if(spell.collider.tag == "Enemy" && spell.distance < maxMagicDistance)
             {
-                print("Spell Hit");
+                spell.collider.GetComponent<EnemyScript>().Kill();
+                spellLine.SetPosition(1, spell.point);
             }
-        }*/
+        }
+        else
+        {
+            spellLine.SetPosition(1, magicOrigin.transform.position + (transform.forward * maxMagicDistance));
+        }
+        lineDestroyCoroutine = LineWait(lineDestoryTime);
+        StartCoroutine(lineDestroyCoroutine);
     }
 
+    private IEnumerator WaitForSpell()
+    {
+        this.GetComponent<Animator>().Play("Magic");
+        yield return new WaitForSeconds(.5f);
+        CastSpell();
+    }
+
+    private IEnumerator LineWait(float destroyTime)
+    {
+        spellLine.enabled = true;
+        yield return new WaitForSeconds(destroyTime);
+        spellLine.enabled = false;
+    }
 }
