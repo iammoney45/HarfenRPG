@@ -20,7 +20,11 @@ public class SuicideForObjects : MonoBehaviour
     			Vector3 newPos = this.transform.position;
     			newPos.y -= hit.distance;
     			this.transform.position = newPos;
-    			this.transform.rotation = Quaternion.Euler(new Vector3(Random.Range(0f,360f),Random.Range(0f,360f),Random.Range(0f,360f)));
+    			float turn = Random.Range(0f, 2f);
+    			if(turn < 1){
+    				this.transform.rotation = Quaternion.Euler(new Vector3(0,180,0));
+    			}
+    			//this.transform.rotation = Quaternion.Euler(new Vector3(Random.Range(0f,360f),Random.Range(0f,360f),Random.Range(0f,360f)));
     		}
     	}
     	else if(Physics.Raycast(this.transform.position, transform.TransformDirection(Vector3.up), out hit, Mathf.Infinity, layerMask)){
