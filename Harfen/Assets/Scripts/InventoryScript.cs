@@ -55,7 +55,6 @@ public class InventoryScript : MonoBehaviour
             swordGO.transform.SetParent(hand.transform);
             swordGO.transform.localPosition = swordPosition;
             swordGO.transform.localEulerAngles = swordRotation;
-            swordGO.GetComponent<SwordScript>().player = this.gameObject;
 
             //set bools/UI
             swordEquipped = true;
@@ -85,7 +84,6 @@ public class InventoryScript : MonoBehaviour
                 swordGO.transform.SetParent(hand.transform);
                 swordGO.transform.localPosition = swordPosition;
                 swordGO.transform.localEulerAngles = swordRotation;
-                swordGO.GetComponent<SwordScript>().player = this.gameObject;
             }
             //if magic "anim" is still playing
             //if (magicEquipped) { this.GetComponent<Animator>().Play("Idle"); }

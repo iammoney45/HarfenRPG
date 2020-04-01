@@ -19,6 +19,20 @@ public class EnemyScript : MonoBehaviour
         
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("hit by: " + collision.gameObject.tag);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
+        {
+            Kill();
+        }
+
+    }
+
     public void Kill()
     {
         Destroy(this.gameObject);
