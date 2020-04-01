@@ -17,11 +17,13 @@ public class InventoryScript : MonoBehaviour
     public Texture magicUIImage;
     public Texture magicAndSwordUIImage;
     public RawImage currentUIImage;
+    public float swordDrawTime;
 
     private bool swordEquipped = false;
     private GameObject swordGO;
     private bool magicEquipped = false;
     private bool swordMagicEqupped = false;
+    private IEnumerator waitForAnimCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -45,35 +47,29 @@ public class InventoryScript : MonoBehaviour
         //equip sword
         else if (Input.GetKeyDown(KeyCode.Alpha1) && !swordEquipped)
         {
+            //set animator bools
+            this.GetComponent<Animator>().SetBool("HasMagic", false);
+            this.GetComponent<Animator>().SetBool("HasSword", true);
+            waitForAnimCoroutine = WaitForAnimation(swordDrawTime);
+            StartCoroutine(waitForAnimCoroutine);
+
             //don't spawn two swords
             if (swordGO != null) { Destroy(swordGO); }
-            //if magic "anim" is still playing
-            //if (magicEquipped) { this.GetComponent<Animator>().Play("Idle"); }
-
-            //instantiate sword at hand
-            swordGO = Instantiate(sword) as GameObject;
-            swordGO.transform.SetParent(hand.transform);
-            swordGO.transform.localPosition = swordPosition;
-            swordGO.transform.localEulerAngles = swordRotation;
-
-            //set bools/UI
-            swordEquipped = true;
-            magicEquipped = false;
-            swordMagicEqupped = false;
-            currentUIImage.texture = swordUIImage;
         }
         else if(Input.GetKeyDown(KeyCode.Alpha2) && !magicEquipped)
         {
+            this.GetComponent<Animator>().SetBool("HasSword", false);
             //Destroy sword if it exists
             if (swordGO != null) { Destroy(swordGO); }
-            //play magic "anim"
-            //this.GetComponent<Animator>().Play("Magic");
 
             //set bools/UI
             swordEquipped = false;
             magicEquipped = true;
             swordMagicEqupped = false;
             currentUIImage.texture = magicUIImage;
+
+            //set animator bools
+            this.GetComponent<Animator>().SetBool("HasMagic", true);
         }
         else if(Input.GetKeyDown(KeyCode.Alpha3) && !swordMagicEqupped)
         {
@@ -99,4 +95,20 @@ public class InventoryScript : MonoBehaviour
 
     public bool IsSwordEquipped() { return swordEquipped; }
     public bool IsMagicEquipped() { return magicEquipped; }
+
+    private IEnumerator WaitForAnimation(float animTime)
+    {
+        yield return new WaitForSeconds(animTime);
+        //instantiate sword at hand
+        swordGO = Instantiate(sword) as GameObject;
+        swordGO.transform.SetParent(hand.transform);
+        swordGO.transform.localPosition = swordPosition;
+        swordGO.transform.localEulerAngles = swordRotation;
+
+        //set bools/UI
+        swordEquipped = true;
+        magicEquipped = false;
+        swordMagicEqupped = false;
+        currentUIImage.texture = swordUIImage;
+    }
 }

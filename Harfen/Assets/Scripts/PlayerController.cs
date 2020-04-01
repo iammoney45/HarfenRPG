@@ -9,11 +9,13 @@ public class PlayerController : MonoBehaviour
     public GameObject magicOrigin;
     public float maxMagicDistance;
     public Camera mainCamera;
+    public float waitForMagicTime;
     public float lineDestoryTime;
 
     private bool currentlyAttacking = false;
     private bool currentlyCasting = false;
     private LineRenderer spellLine;
+    private IEnumerator waitForSpellCoroutine;
     private IEnumerator lineDestroyCoroutine;
 
     // Start is called before the first frame update
@@ -28,28 +30,33 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
+        if(x > 0 || y > 0)
+        {
+            this.GetComponent<Animator>().SetBool("Walking", true);
+        }
+        else
+        {
+            this.GetComponent<Animator>().SetBool("Walking", false);
+        }
 
         transform.Translate(playerSpeed * x * Time.fixedDeltaTime, 0f, playerSpeed * y * Time.fixedDeltaTime);
 
         if (Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsSwordEquipped())
         {
             currentlyAttacking = true;
-            this.GetComponent<Animator>().Play("Sword Stab");
+            this.GetComponent<Animator>().SetTrigger("Attack");
         }
         else if(Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsMagicEquipped())
         {
             currentlyCasting = true;
-            StartCoroutine("WaitForSpell");
+            waitForSpellCoroutine = WaitForSpell(waitForMagicTime);
+            StartCoroutine(waitForSpellCoroutine);
             
         }
         if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
         {
             currentlyAttacking = false;
         }
-        /*else if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Magic"))
-        {
-            currentlyCasting = false;
-        }*/
     }
 
     public bool IsCurrentlyAttacking() { return currentlyAttacking; }
@@ -58,30 +65,33 @@ public class PlayerController : MonoBehaviour
     private void CastSpell()
     {
         RaycastHit spell;
+        //set initial positon for line renderer and enable it
         spellLine.SetPosition(0, magicOrigin.transform.position);
         spellLine.enabled = true;
-        Vector3 rayOrgin = mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        //raycast
         if(Physics.Raycast(magicOrigin.transform.position, transform.forward, out spell, maxMagicDistance)){
             Debug.DrawLine(magicOrigin.transform.position, transform.forward, Color.green);
+            //if it hits an enemy and raycast dist is less than max distance, kill enemy and draw raycast to hit point
             if(spell.collider.tag == "Enemy" && spell.distance < maxMagicDistance)
             {
-                print("Kill");
                 spell.collider.GetComponent<EnemyScript>().Kill();
                 spellLine.SetPosition(1, spell.point);
             }
         }
+        //if not hit anything, draw line length of max distancy
         else
         {
             spellLine.SetPosition(1, magicOrigin.transform.position + (transform.forward * maxMagicDistance));
         }
+        //wait set time before destryoing line
         lineDestroyCoroutine = LineWait(lineDestoryTime);
         StartCoroutine(lineDestroyCoroutine);
     }
 
-    private IEnumerator WaitForSpell()
+    private IEnumerator WaitForSpell(float waitTime)
     {
-        this.GetComponent<Animator>().Play("Magic");
-        yield return new WaitForSeconds(.5f);
+        this.GetComponent<Animator>().SetTrigger("Attack");
+        yield return new WaitForSeconds(waitTime);
         CastSpell();
     }
 
