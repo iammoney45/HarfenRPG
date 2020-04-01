@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
             Debug.DrawLine(magicOrigin.transform.position, transform.forward, Color.green);
             if(spell.collider.tag == "Enemy" && spell.distance < maxMagicDistance)
             {
+                print("Kill");
                 spell.collider.GetComponent<EnemyScript>().Kill();
                 spellLine.SetPosition(1, spell.point);
             }
