@@ -1748,6 +1748,9 @@ MonoBehaviour:
     type: 3}
   currentUIImage: {fileID: 1881955244}
   swordDrawTime: 0.75
+  swordSheathTime: 0.7
+  magicDrawTime: 1.33
+  magicDrawTime2: 1.5
 --- !u!114 &857624326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2557,6 +2560,9 @@ MonoBehaviour:
     type: 3}
   currentUIImage: {fileID: 1881955244}
   swordDrawTime: 0
+  swordSheathTime: 0
+  magicDrawTime: 0
+  magicDrawTime2: 0
 --- !u!111 &1412223043
 Animation:
   m_ObjectHideFlags: 0
