@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
     private void CastSpell()
     {
         RaycastHit spell;
+        Vector3 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //set initial positon for line renderer and enable it
         spellLine.SetPosition(0, magicOrigin.transform.position);
         spellLine.enabled = true;

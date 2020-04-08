@@ -23,17 +23,17 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ai = this.GetComponent<EnemyAIController>();
+        /*ai = this.GetComponent<EnemyAIController>();
         rb = this.GetComponent<Rigidbody>();
         position = rb.position;
-        orientation = transform.eulerAngles.y;
-        this.GetComponent<Animation>().Play("Walk");
+        orientation = transform.eulerAngles.y;*/
+        //this.GetComponent<Animation>().Play("Walk");
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //get new linear and angular velocity
+        /*//get new linear and angular velocity
         linear = ai.Wander().linear;
         angular = ai.Wander().angular;
 
@@ -52,7 +52,7 @@ public class EnemyScript : MonoBehaviour
         //add forces to rb
         rb.AddForce(velocity - rb.velocity, ForceMode.VelocityChange);
         position = rb.position;
-        rb.MoveRotation(Quaternion.Euler(new Vector3(0, Mathf.Rad2Deg * orientation, 0)));
+        rb.MoveRotation(Quaternion.Euler(new Vector3(0, Mathf.Rad2Deg * orientation, 0)));*/
     }
 
     private void OnCollisionEnter(Collision collision)
