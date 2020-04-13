@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -8,51 +9,36 @@ public class EnemyScript : MonoBehaviour
     public GameObject player;
 
     //for enemy AI
-    public float maxSpeed;
-    public float orientation;
-    public float rotation;
-    public Vector3 position;
-    public Vector3 velocity;
+    public Vector3 target;
+    public float walkRadius;
 
-    private float angular;
-    private Vector3 linear;
-
-    private EnemyAIController ai;
-    private Rigidbody rb;
+    private NavMeshAgent agent;
+    private bool reachedDestination = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        /*ai = this.GetComponent<EnemyAIController>();
-        rb = this.GetComponent<Rigidbody>();
-        position = rb.position;
-        orientation = transform.eulerAngles.y;*/
-        //this.GetComponent<Animation>().Play("Walk");
+        agent = GetComponent<NavMeshAgent>();
+        Vector3 randomDirection = Random.insideUnitSphere * walkRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
+        target = hit.position;
+        this.GetComponent<Animator>().SetBool("Walking", true);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        /*//get new linear and angular velocity
-        linear = ai.Wander().linear;
-        angular = ai.Wander().angular;
-
-        //update values from wander function
-        orientation += rotation * Time.fixedDeltaTime;
-        velocity += linear * Time.fixedDeltaTime;
-        rotation += angular * Time.fixedDeltaTime;
-
-        //don't exceed max velocity
-        if (velocity.magnitude > maxSpeed)
+        if (reachedDestination)
         {
-            velocity.Normalize();
-            velocity *= maxSpeed;
+            updatePosition();
+            reachedDestination = false;
         }
-
-        //add forces to rb
-        rb.AddForce(velocity - rb.velocity, ForceMode.VelocityChange);
-        position = rb.position;
-        rb.MoveRotation(Quaternion.Euler(new Vector3(0, Mathf.Rad2Deg * orientation, 0)));*/
+        else
+        {
+            if (ArrivedAtDestination()) { reachedDestination = true; }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -72,5 +58,22 @@ public class EnemyScript : MonoBehaviour
     public void Kill()
     {
         Destroy(this.gameObject);
+    }
+
+    public void updatePosition()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * walkRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
+        target = hit.position;
+        agent.SetDestination(target);
+        print("new position is: " + target.x + " " + target.y + " " + target.z);
+    }
+
+    public bool ArrivedAtDestination()
+    {
+        if (agent.remainingDistance < 5f) { return true; }
+        else { return false; }
     }
 }

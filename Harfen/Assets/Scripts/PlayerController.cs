@@ -11,17 +11,18 @@ public class PlayerController : MonoBehaviour
     public Camera mainCamera;
     public float waitForMagicTime;
     public float lineDestoryTime;
+    public GameObject lineRendererPrefab;
+    private LineRenderer spellLine;
 
     private bool currentlyAttacking = false;
     private bool currentlyCasting = false;
-    private LineRenderer spellLine;
     private IEnumerator waitForSpellCoroutine;
     private IEnumerator lineDestroyCoroutine;
 
     // Start is called before the first frame update
     void Start()
     {
-        spellLine = GetComponent<LineRenderer>();
+        spellLine = lineRendererPrefab.GetComponent<LineRenderer>();
         spellLine.enabled = false;
     }
 
