@@ -11,9 +11,11 @@ public class EnemyScript : MonoBehaviour
     //for enemy AI
     public Vector3 target;
     public float walkRadius;
+    public float deathAnimTime;
 
     private NavMeshAgent agent;
     private bool reachedDestination = false;
+    private IEnumerator waitForDeathCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,7 @@ public class EnemyScript : MonoBehaviour
         NavMeshHit hit;
         NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
         target = hit.position;
+        //agent.SetDestination(target);
         this.GetComponent<Animator>().SetBool("Walking", true);
     }
 
@@ -32,7 +35,7 @@ public class EnemyScript : MonoBehaviour
     {
         if (reachedDestination)
         {
-            updatePosition();
+            //updatePosition();
             reachedDestination = false;
         }
         else
@@ -43,12 +46,13 @@ public class EnemyScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        print("hit by: " + collision.gameObject.tag);
+        //print("hit by: " + collision.gameObject.tag);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
+        print("hit by: " + other.gameObject.tag);
+        if (player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack"))
         {
             Kill();
         }
@@ -57,7 +61,8 @@ public class EnemyScript : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(this.gameObject);
+        waitForDeathCoroutine = WaitForDeathAnim(deathAnimTime);
+        StartCoroutine(waitForDeathCoroutine);
     }
 
     public void updatePosition()
@@ -75,5 +80,12 @@ public class EnemyScript : MonoBehaviour
     {
         if (agent.remainingDistance < 5f) { return true; }
         else { return false; }
+    }
+
+    private IEnumerator WaitForDeathAnim(float waitTime)
+    {
+        this.GetComponent<Animator>().SetTrigger("Dead");
+        yield return new WaitForSeconds(waitTime);
+        Destroy(this.gameObject);
     }
 }

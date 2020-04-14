@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour
     public float waitForMagicTime;
     public float lineDestoryTime;
     public GameObject lineRendererPrefab;
-    private LineRenderer spellLine;
 
+    private LineRenderer spellLine;
     private bool currentlyAttacking = false;
     private bool currentlyCasting = false;
     private IEnumerator waitForSpellCoroutine;
@@ -31,14 +31,6 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
-        if(x > 0 || y > 0)
-        {
-            this.GetComponent<Animator>().SetBool("Walking", true);
-        }
-        else
-        {
-            this.GetComponent<Animator>().SetBool("Walking", false);
-        }
 
         transform.Translate(playerSpeed * x * Time.fixedDeltaTime, 0f, playerSpeed * y * Time.fixedDeltaTime);
 
@@ -66,24 +58,23 @@ public class PlayerController : MonoBehaviour
     private void CastSpell()
     {
         RaycastHit spell;
-        Vector3 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //set initial positon for line renderer and enable it
         spellLine.SetPosition(0, magicOrigin.transform.position);
-        spellLine.enabled = true;
         //raycast
-        if(Physics.Raycast(magicOrigin.transform.position, transform.forward, out spell, maxMagicDistance)){
-            Debug.DrawLine(magicOrigin.transform.position, transform.forward, Color.green);
+        Debug.DrawLine(magicOrigin.transform.position, transform.forward*maxMagicDistance + magicOrigin.transform.position, Color.green);
+        if (Physics.Raycast(magicOrigin.transform.position, transform.forward, out spell, maxMagicDistance)){
             //if it hits an enemy and raycast dist is less than max distance, kill enemy and draw raycast to hit point
-            if(spell.collider.tag == "Enemy" && spell.distance < maxMagicDistance)
+            if(spell.collider.tag == "Enemy")
             {
+                print("hit");
                 spell.collider.GetComponent<EnemyScript>().Kill();
                 spellLine.SetPosition(1, spell.point);
             }
         }
-        //if not hit anything, draw line length of max distancy
+        //if not hit anything, draw line length of max distanc
         else
         {
-            spellLine.SetPosition(1, magicOrigin.transform.position + (transform.forward * maxMagicDistance));
+            spellLine.SetPosition(1, (transform.forward * maxMagicDistance + magicOrigin.transform.position));
         }
         //wait set time before destryoing line
         lineDestroyCoroutine = LineWait(lineDestoryTime);
