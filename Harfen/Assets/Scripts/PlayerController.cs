@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private bool currentlyCasting = false;
     private IEnumerator waitForSpellCoroutine;
     private IEnumerator lineDestroyCoroutine;
+    private float coolDownTime = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,24 +32,32 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
+        coolDownTime -= Time.fixedDeltaTime;
+
+        if(x > 0 || y > 0)
+        {
+            this.GetComponent<Animator>().SetBool("Walking", true);
+        }
+        else
+        {
+            this.GetComponent<Animator>().SetBool("Walking", false);
+        }
 
         transform.Translate(playerSpeed * x * Time.fixedDeltaTime, 0f, playerSpeed * y * Time.fixedDeltaTime);
 
-        if (Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsSwordEquipped())
+        if (Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsSwordEquipped() && coolDownTime < 0f)
         {
             currentlyAttacking = true;
             this.GetComponent<Animator>().SetTrigger("Attack");
+            coolDownTime = 5f;
         }
-        else if(Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsMagicEquipped())
+        else if(Input.GetMouseButtonDown(0) && this.GetComponent<InventoryScript>().IsMagicEquipped() && coolDownTime < 0f)
         {
             currentlyCasting = true;
             waitForSpellCoroutine = WaitForSpell(waitForMagicTime);
             StartCoroutine(waitForSpellCoroutine);
-            
-        }
-        if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Sword Stab"))
-        {
-            currentlyAttacking = false;
+            coolDownTime = 5f;
+
         }
     }
 

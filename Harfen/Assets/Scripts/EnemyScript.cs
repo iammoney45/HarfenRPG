@@ -74,7 +74,6 @@ public class EnemyScript : MonoBehaviour
         NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
         target = hit.position;
         agent.SetDestination(target);
-        print("new position is: " + target.x + " " + target.y + " " + target.z);
     }
 
     public bool ArrivedAtDestination()
