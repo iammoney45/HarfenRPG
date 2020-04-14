@@ -16,6 +16,7 @@ public class EnemyScript : MonoBehaviour
     private NavMeshAgent agent;
     private bool reachedDestination = false;
     private IEnumerator waitForDeathCoroutine;
+    private bool stopMoving = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,16 +27,16 @@ public class EnemyScript : MonoBehaviour
         NavMeshHit hit;
         NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
         target = hit.position;
-        //agent.SetDestination(target);
+        agent.SetDestination(target);
         this.GetComponent<Animator>().SetBool("Walking", true);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (reachedDestination)
+        if (reachedDestination && !stopMoving)
         {
-            //updatePosition();
+            updatePosition();
             reachedDestination = false;
         }
         else
@@ -85,6 +86,8 @@ public class EnemyScript : MonoBehaviour
     private IEnumerator WaitForDeathAnim(float waitTime)
     {
         this.GetComponent<Animator>().SetTrigger("Dead");
+        agent.SetDestination(transform.position);
+        stopMoving = true;
         yield return new WaitForSeconds(waitTime);
         Destroy(this.gameObject);
     }
