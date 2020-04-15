@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public Camera mainCamera;
     public float waitForMagicTime;
     public float lineDestoryTime;
+    public float deathAnimTime;
     public GameObject lineRendererPrefab;
 
     private LineRenderer spellLine;
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool currentlyCasting = false;
     private IEnumerator waitForSpellCoroutine;
     private IEnumerator lineDestroyCoroutine;
+    private IEnumerator waitForDeathCoroutine;
     private float coolDownTime = 0f;
 
     // Start is called before the first frame update
@@ -88,6 +90,31 @@ public class PlayerController : MonoBehaviour
         //wait set time before destryoing line
         lineDestroyCoroutine = LineWait(lineDestoryTime);
         StartCoroutine(lineDestroyCoroutine);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
+        other.gameObject.tag == "Sword")
+        {
+            Kill();
+        }
+
+    }
+
+    public void Kill()
+    {
+        waitForDeathCoroutine = WaitForDeathAnim(deathAnimTime);
+        StartCoroutine(waitForDeathCoroutine);
+    }
+
+    private IEnumerator WaitForDeathAnim(float waitTime)
+    {
+        this.GetComponent<Animator>().SetTrigger("Dead");
+        this.GetComponent<Animator>().SetBool("Walking", false);
+        this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        yield return new WaitForSeconds(waitTime);
+        Destroy(this.gameObject);
     }
 
     private IEnumerator WaitForSpell(float waitTime)
