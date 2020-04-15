@@ -13,17 +13,26 @@ public class EnemyScript : MonoBehaviour
     public float walkRadius;
     public float deathAnimTime;
     public float attackDistance;
+    public float swordAnimTime;
+    public float magicAnimTime;
+    public float clearAnimTime;
 
     private NavMeshAgent agent;
     private bool reachedDestination = false;
     private IEnumerator waitForDeathCoroutine;
+    private IEnumerator switchToSwordCoroutine;
+    private IEnumerator switchToMagicCoroutine;
+    private IEnumerator clearInventoryCoroutine;
     private bool stopMoving = false;
     private bool attackingPlayer = false;
+    private EnemyInventoryScript enemyInventoryScript;
+    private float switchCooldown = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        enemyInventoryScript = GetComponent<EnemyInventoryScript>();
         Vector3 randomDirection = Random.insideUnitSphere * walkRadius;
         randomDirection += transform.position;
         NavMeshHit hit;
@@ -36,20 +45,33 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (PlayerAttackingWithSword())
+        if (PlayerAttacking())
         {
             attackingPlayer = true;
             agent.SetDestination(player.transform.position);
-        }
-
-        if (reachedDestination && !stopMoving && !attackingPlayer)
-        {
-            updatePosition();
-            reachedDestination = false;
+            if (!this.GetComponent<Animator>().GetBool("HasSword"))
+            {
+                switchToSwordCoroutine = SwitchToSword(swordAnimTime);
+                StartCoroutine(switchToSwordCoroutine);
+            }
         }
         else
         {
-            if (ArrivedAtDestination()) { reachedDestination = true; }
+            attackingPlayer = false;
+            if(this.GetComponent<Animator>().GetBool("HasSword"))
+            {
+                clearInventoryCoroutine = ClearInventory(clearAnimTime);
+                StartCoroutine(clearInventoryCoroutine);
+            }
+            else if (reachedDestination && !stopMoving && !attackingPlayer)
+            {
+                updatePosition();
+                reachedDestination = false;
+            }
+            else
+            {
+                if (ArrivedAtDestination()) { reachedDestination = true; }
+            }
         }
     }
 
@@ -90,9 +112,10 @@ public class EnemyScript : MonoBehaviour
         else { return false; }
     }
 
-    private bool PlayerAttackingWithSword()
+    private bool PlayerAttacking()
     {
-        if(player.GetComponent<Animator>().GetBool("HasSword") && Mathf.Abs((this.transform.position - player.transform.position).magnitude) < attackDistance)
+        if((player.GetComponent<Animator>().GetBool("HasSword") || player.GetComponent<Animator>().GetBool("HasMagic"))
+            && Mathf.Abs((this.transform.position - player.transform.position).magnitude) < attackDistance)
         {
             return true;
         }
@@ -109,5 +132,36 @@ public class EnemyScript : MonoBehaviour
         stopMoving = true;
         yield return new WaitForSeconds(waitTime);
         Destroy(this.gameObject);
+    }
+
+    private IEnumerator SwitchToSword(float waitTime)
+    {
+        this.GetComponent<Animator>().SetBool("Walking", false);
+        agent.SetDestination(transform.position);
+        enemyInventoryScript.EquipSword();
+        yield return new WaitForSeconds(waitTime);
+        this.GetComponent<Animator>().SetBool("Walking", true);
+        agent.SetDestination(player.transform.position);
+    }
+
+    private IEnumerator SwitchToMagic(float waitTime)
+    {
+        this.GetComponent<Animator>().SetBool("Walking", false);
+        agent.SetDestination(transform.position);
+        enemyInventoryScript.EquipMagic();
+        yield return new WaitForSeconds(waitTime);
+        this.GetComponent<Animator>().SetBool("Walking", true);
+        agent.SetDestination(player.transform.position);
+    }
+
+    private IEnumerator ClearInventory(float waitTime)
+    {
+        this.GetComponent<Animator>().SetBool("Walking", false);
+        agent.SetDestination(transform.position);
+        enemyInventoryScript.ClearInventory();
+        yield return new WaitForSeconds(waitTime);
+        this.GetComponent<Animator>().SetBool("Walking", true);
+        updatePosition();
+        reachedDestination = false;
     }
 }

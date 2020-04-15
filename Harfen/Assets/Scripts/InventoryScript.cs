@@ -45,81 +45,97 @@ public class InventoryScript : MonoBehaviour
         //remove sword (or current item in future)
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            this.GetComponent<Animator>().SetBool("HasMagic", false);
-            this.GetComponent<Animator>().SetBool("HasSword", false);
-
-            //destroy sword if it exists and set all bools to false
-            if (swordGO != null)
+            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle") ||
+            this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("MagicIdle") ||
+            this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordIdle"))
             {
-                destroyObjectCoroutine = DestroyObject(swordSheathTime);
-                StartCoroutine(destroyObjectCoroutine);
-            }
+                this.GetComponent<Animator>().SetBool("HasMagic", false);
+                this.GetComponent<Animator>().SetBool("HasSword", false);
 
-            swordEquipped = false;
-            magicEquipped = false;
-            swordMagicEqupped = false;
-            currentUIImage.texture = emptyUIImage;
+                //destroy sword if it exists and set all bools to false
+                if (swordGO != null || wandGO != null)
+                {
+                    destroyObjectCoroutine = DestroyObject(swordSheathTime);
+                    StartCoroutine(destroyObjectCoroutine);
+                }
+
+                swordEquipped = false;
+                magicEquipped = false;
+                swordMagicEqupped = false;
+                currentUIImage.texture = emptyUIImage;
+            }
         }
         //equip sword
         else if (Input.GetKeyDown(KeyCode.Alpha1) && !swordEquipped)
         {
-            //set bools/UI
-            swordEquipped = true;
-            magicEquipped = false;
-            swordMagicEqupped = false;
-            currentUIImage.texture = swordUIImage;
+            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle") ||
+            this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("MagicIdle"))
+            {
+                //set bools/UI
+                swordEquipped = true;
+                magicEquipped = false;
+                swordMagicEqupped = false;
+                currentUIImage.texture = swordUIImage;
 
-            if (wandGO != null)
-            {
-                destroyObjectCoroutine = DestroyObject(swordSheathTime);
-                StartCoroutine(destroyObjectCoroutine);
-            }
-            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            {
-                this.GetComponent<Animator>().SetBool("HasSword", true);
-                equipSwordCoroutine = EquipSword(swordDrawTime);
-                StartCoroutine(equipSwordCoroutine);
-            }
-            //if switching from magic to sword don't "sheath" magic to redraw sword and must be in idle magic state
-            if(this.GetComponent<Animator>().GetBool("HasMagic") && 
-                this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("MagicIdle"))
-            {
-                this.GetComponent<Animator>().SetBool("SwitchMagicToSword", true);
-                equipSwordCoroutine = EquipSword(swordDrawTime);
-                StartCoroutine(equipSwordCoroutine);
+                if (wandGO != null)
+                {
+                    destroyObjectCoroutine = DestroyObject(swordSheathTime);
+                    StartCoroutine(destroyObjectCoroutine);
+                }
+
+                if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    this.GetComponent<Animator>().SetBool("HasSword", true);
+                    this.GetComponent<Animator>().SetBool("HasMagic", false);
+                    equipSwordCoroutine = EquipSword(swordDrawTime);
+                    StartCoroutine(equipSwordCoroutine);
+                }
+                //if switching from magic to sword don't "sheath" magic to redraw sword and must be in idle magic state
+                else if (this.GetComponent<Animator>().GetBool("HasMagic") &&
+                    this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("MagicIdle"))
+                {
+                    this.GetComponent<Animator>().SetBool("SwitchMagicToSword", true);
+                    equipSwordCoroutine = EquipSword(swordDrawTime);
+                    StartCoroutine(equipSwordCoroutine);
+                }
             }
         }
+        //equip magic
         else if(Input.GetKeyDown(KeyCode.Alpha2) && !magicEquipped)
         {
-            //set bools/UI
-            swordEquipped = false;
-            magicEquipped = true;
-            swordMagicEqupped = false;
-            currentUIImage.texture = magicUIImage;
+            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle") ||
+            this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordIdle")) {
+                //set bools/UI
+                swordEquipped = false;
+                magicEquipped = true;
+                swordMagicEqupped = false;
+                currentUIImage.texture = magicUIImage;
 
-            //Destroy sword if it exists
-            if (swordGO != null) 
-            {
-                destroyObjectCoroutine = DestroyObject(swordSheathTime);
-                StartCoroutine(destroyObjectCoroutine);
-            }
+                //Destroy sword if it exists
+                if (swordGO != null)
+                {
+                    destroyObjectCoroutine = DestroyObject(swordSheathTime);
+                    StartCoroutine(destroyObjectCoroutine);
+                }
 
-            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            {
-                equipMagicCoroutine = EquipMagic(magicDrawTime);
-                StartCoroutine(equipMagicCoroutine);
+                if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    this.GetComponent<Animator>().SetBool("HasMagic", true);
+                    this.GetComponent<Animator>().SetBool("HasSword", false);
+                    equipMagicCoroutine = EquipMagic(magicDrawTime);
+                    StartCoroutine(equipMagicCoroutine);
+                }
+                if (this.GetComponent<Animator>().GetBool("HasSword") &&
+                    this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordIdle"))
+                {
+                    this.GetComponent<Animator>().SetBool("HasMagic", true);
+                    this.GetComponent<Animator>().SetBool("HasSword", false);
+                    equipMagicCoroutine = EquipMagic(magicDrawTime + magicDrawTime2);
+                    StartCoroutine(equipMagicCoroutine);
+                }
             }
-            //if switching from magic to sword don't "sheath" magic to redraw sword and must be in idle magic state
-            if (this.GetComponent<Animator>().GetBool("HasSword") &&
-                this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordIdle"))
-            {
-                equipMagicCoroutine = EquipMagic(magicDrawTime + magicDrawTime2);
-                StartCoroutine(equipMagicCoroutine);
-            }
-
-            //set animator bools
-            this.GetComponent<Animator>().SetBool("HasMagic", true);
         }
+        //for magic and sword. to be implemented later
         else if(Input.GetKeyDown(KeyCode.Alpha3) && !swordMagicEqupped)
         {
             //if sword is not equipped, equip it

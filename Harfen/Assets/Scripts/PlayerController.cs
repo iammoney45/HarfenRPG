@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         float y = Input.GetAxis("Vertical");
         coolDownTime -= Time.fixedDeltaTime;
 
-        if(x > 0 || y > 0)
+        if(System.Math.Abs(x) > Mathf.Epsilon || System.Math.Abs(y) > Mathf.Epsilon)
         {
             this.GetComponent<Animator>().SetBool("Walking", true);
         }
