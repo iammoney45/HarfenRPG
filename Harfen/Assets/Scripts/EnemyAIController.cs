@@ -5,46 +5,39 @@ using UnityEngine.AI;
 
 public class EnemyAIController : MonoBehaviour
 {
-    public float walkRadius;
 
-    public NavMeshAgent agent;
+    public EnemyScript self;
+    public Vector3 target;
+    public float slowRadiusL;
+    public float targetRadiusL;
+    public float slowRadiusA;
+    public float targetRadiusA;
+    public float timeToTarget;
+    public float maxSpeed;
+    public float maxAcceleration;
+    public float maxAngularAcceleration;
+    public float maxRotation;
 
-    private bool reachedDestination = true;
+    // For wander function
+    public float wanderOffset;
+    public float wanderRadius;
+    public float wanderRate;
+    private float wanderOrientation;
+
+    public struct wanderSteering
+    {
+        public float angular;
+        public Vector3 linear;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //agent = this.GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
-    void Update()
+    void fixedUpdate()
     {
-        if(reachedDestination)
-        {
-            agent.SetDestination(updatePosition());
-            reachedDestination = false;
-        }
-        else
-        {
-            if(ArrivedAtDestination()) { reachedDestination = true; }
-        }
-    }
 
-    public Vector3 updatePosition()
-    {
-        print("Setting positon");
-        Vector3 randomDirection = Random.insideUnitSphere * walkRadius;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
-        Vector3 finalPosition = hit.position;
-        return finalPosition;
-    }
-
-    public bool ArrivedAtDestination()
-    {
-        if(agent.remainingDistance < 5f) { return true; }
-        else { return false; }
     }
 }
