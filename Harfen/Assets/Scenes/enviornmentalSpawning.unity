@@ -1446,6 +1446,7 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   walkRadius: 0
   deathAnimTime: 0
+  attackDistance: 0
 --- !u!65 &703883578
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4074,6 +4075,7 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
+  attackDistance: 40
 --- !u!1 &1994538137 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 59715374794208231, guid: 4b112ceba15414fb7af6c2e8c55c7ddd,

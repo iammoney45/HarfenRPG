@@ -12,11 +12,13 @@ public class EnemyScript : MonoBehaviour
     public Vector3 target;
     public float walkRadius;
     public float deathAnimTime;
+    public float attackDistance;
 
     private NavMeshAgent agent;
     private bool reachedDestination = false;
     private IEnumerator waitForDeathCoroutine;
     private bool stopMoving = false;
+    private bool attackingPlayer = false;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +36,13 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (reachedDestination && !stopMoving)
+        if (PlayerAttackingWithSword())
+        {
+            attackingPlayer = true;
+            agent.SetDestination(player.transform.position);
+        }
+
+        if (reachedDestination && !stopMoving && !attackingPlayer)
         {
             updatePosition();
             reachedDestination = false;
@@ -80,6 +88,18 @@ public class EnemyScript : MonoBehaviour
     {
         if (agent.remainingDistance < 5f) { return true; }
         else { return false; }
+    }
+
+    private bool PlayerAttackingWithSword()
+    {
+        if(player.GetComponent<Animator>().GetBool("HasSword") && Mathf.Abs((this.transform.position - player.transform.position).magnitude) < attackDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private IEnumerator WaitForDeathAnim(float waitTime)
