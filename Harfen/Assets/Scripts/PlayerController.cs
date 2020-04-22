@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator lineDestroyCoroutine;
     private IEnumerator waitForDeathCoroutine;
     private float coolDownTime = 0f;
+    private bool dead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
 
     public bool IsCurrentlyAttacking() { return currentlyAttacking; }
     public bool IsCurrentlyCasting() { return currentlyCasting; }
+    public bool IsDead() { return dead; }
 
     private void CastSpell()
     {
@@ -77,7 +79,6 @@ public class PlayerController : MonoBehaviour
             //if it hits an enemy and raycast dist is less than max distance, kill enemy and draw raycast to hit point
             if(spell.collider.tag == "Enemy")
             {
-                print("hit");
                 spell.collider.GetComponent<EnemyScript>().Kill();
                 spellLine.SetPosition(1, spell.point);
             }
@@ -92,22 +93,26 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(lineDestroyCoroutine);
     }
 
+    //if hit by enemy with sword
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
-        other.gameObject.tag == "Sword" && !other.GetComponent<EnemyScript>().IsDead())
+        other.gameObject.tag == "Sword" && other.transform.parent.parent.parent.parent.parent.parent.parent.parent.parent.tag != "Player")
         {
             Kill();
         }
 
     }
 
+    //kills player
     public void Kill()
     {
+        dead = true;
         waitForDeathCoroutine = WaitForDeathAnim(deathAnimTime);
         StartCoroutine(waitForDeathCoroutine);
     }
 
+    //wait for death animation before destroying
     private IEnumerator WaitForDeathAnim(float waitTime)
     {
         this.GetComponent<Animator>().SetTrigger("Dead");
@@ -117,6 +122,7 @@ public class PlayerController : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    //wait for spell animation before actually casting
     private IEnumerator WaitForSpell(float waitTime)
     {
         this.GetComponent<Animator>().SetTrigger("Attack");
@@ -124,6 +130,7 @@ public class PlayerController : MonoBehaviour
         CastSpell();
     }
 
+    //wait destroyTime before destroying the magic line
     private IEnumerator LineWait(float destroyTime)
     {
         spellLine.enabled = true;

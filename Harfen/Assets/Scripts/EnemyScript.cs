@@ -49,17 +49,19 @@ public class EnemyScript : MonoBehaviour
     void FixedUpdate()
     {
         coolDownTime -= Time.fixedDeltaTime;
+        //if player is attacking with sword or magic, draw sword
         if (PlayerAttacking())
         {
-            print("Attacking");
             attackingPlayer = true;
             agent.SetDestination(player.transform.position);
+            //if enemy doesn't already have sword out, draw sword
             if (!this.GetComponent<Animator>().GetBool("HasSword"))
             {
                 switchToSwordCoroutine = SwitchToSword(swordAnimTime);
                 StartCoroutine(switchToSwordCoroutine);
             }
 
+            //if you are close enough to the player, stop walking and attack
             if (Mathf.Abs((this.transform.position - player.transform.position).magnitude) < attackDistance && coolDownTime < 0)
             {
                 this.GetComponent<Animator>().SetBool("Walking", false);
@@ -74,11 +76,13 @@ public class EnemyScript : MonoBehaviour
         else
         {
             attackingPlayer = false;
+            //sheath sword
             if(this.GetComponent<Animator>().GetBool("HasSword"))
             {
                 clearInventoryCoroutine = ClearInventory(clearAnimTime);
                 StartCoroutine(clearInventoryCoroutine);
             }
+            //if you reached the random position, find a new position to walk too
             else if (reachedDestination && !stopMoving && !attackingPlayer)
             {
                 updatePosition();
@@ -91,22 +95,27 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    public bool IsDead() { return dead; }
+
+    //hit by player sword
     private void OnTriggerEnter(Collider other)
     {
         if (player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
-        other.gameObject.tag == "Sword")
+        other.gameObject.tag == "Sword" && !player.GetComponent<PlayerController>().IsDead())
         {
-            dead = true;
             Kill();
         }
     }
 
+    //destroys enemy
     public void Kill()
     {
+        dead = true;
         waitForDeathCoroutine = WaitForDeathAnim(deathAnimTime);
         StartCoroutine(waitForDeathCoroutine);
     }
 
+    //finds a new random position to walk too
     public void updatePosition()
     {
         Vector3 randomDirection = Random.insideUnitSphere * walkRadius;
@@ -117,12 +126,14 @@ public class EnemyScript : MonoBehaviour
         agent.SetDestination(target);
     }
 
+    //checks if enemy arrived at set destination
     public bool ArrivedAtDestination()
     {
         if (agent.remainingDistance < 5f) { return true; }
         else { return false; }
     }
 
+    //returns true if player has sword or wand drawn
     private bool PlayerAttacking()
     {
         if((player.GetComponent<Animator>().GetBool("HasSword") || player.GetComponent<Animator>().GetBool("HasMagic"))
@@ -136,6 +147,7 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    //wait for death animation before destroying
     private IEnumerator WaitForDeathAnim(float waitTime)
     {
         this.GetComponent<Animator>().SetTrigger("Dead");
@@ -145,12 +157,14 @@ public class EnemyScript : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    //wait for the attack animation
     private IEnumerator WaitForAttack(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         this.GetComponent<Animator>().SetBool("Walking", true);
     }
 
+    //switch to sword animation
     private IEnumerator SwitchToSword(float waitTime)
     {
         this.GetComponent<Animator>().SetBool("Walking", false);
@@ -171,6 +185,7 @@ public class EnemyScript : MonoBehaviour
         agent.SetDestination(player.transform.position);
     }*/
 
+    //stop walking and sheath sword
     private IEnumerator ClearInventory(float waitTime)
     {
         this.GetComponent<Animator>().SetBool("Walking", false);
