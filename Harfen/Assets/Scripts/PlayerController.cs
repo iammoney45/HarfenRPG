@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         Debug.DrawLine(magicOrigin.transform.position, transform.forward*maxMagicDistance + magicOrigin.transform.position, Color.green);
         if (Physics.Raycast(magicOrigin.transform.position, transform.forward, out spell, maxMagicDistance)){
             //if it hits an enemy and raycast dist is less than max distance, kill enemy and draw raycast to hit point
-            if(spell.collider.tag == "Enemy")
+            if(spell.collider.tag == "Enemy" && !spell.collider.GetComponent<EnemyScript>().IsDead())
             {
                 spell.collider.GetComponent<EnemyScript>().Kill();
                 spellLine.SetPosition(1, spell.point);
@@ -97,7 +97,8 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
-        other.gameObject.tag == "Sword" && other.transform.parent.parent.parent.parent.parent.parent.parent.parent.parent.tag != "Player")
+            other.gameObject.tag == "Sword" && !dead &&
+            other.transform.parent.parent.parent.parent.parent.parent.parent.parent.parent.tag != "Player")
         {
             Kill();
         }
