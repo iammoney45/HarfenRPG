@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
-        other.gameObject.tag == "Sword")
+        other.gameObject.tag == "Sword" && !other.GetComponent<EnemyScript>().IsDead())
         {
             Kill();
         }

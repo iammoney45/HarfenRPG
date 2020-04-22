@@ -29,6 +29,7 @@ public class EnemyScript : MonoBehaviour
     private bool attackingPlayer = false;
     private EnemyInventoryScript enemyInventoryScript;
     private float coolDownTime = 0f;
+    private bool dead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -95,6 +96,7 @@ public class EnemyScript : MonoBehaviour
         if (player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
         other.gameObject.tag == "Sword")
         {
+            dead = true;
             Kill();
         }
     }
@@ -179,4 +181,6 @@ public class EnemyScript : MonoBehaviour
         updatePosition();
         reachedDestination = false;
     }
+
+    public bool IsDead() { return dead; }
 }
