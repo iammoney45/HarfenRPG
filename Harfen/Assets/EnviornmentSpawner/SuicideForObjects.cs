@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class SuicideForObjects : MonoBehaviour
 {
-    //public Transform player = null;
-    //public Component daddyScript = null;
+
     public GameObject player = null;
     int timerOfDeath = 0;
+    bool awayFromPlayer = false;
 
 
     void Awake()
     {
     	int layerMask = 1 << 9;
-    	//layerMask = ~layerMask;
     	RaycastHit hit;
     	if(Physics.Raycast(this.transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask)){
     		if(hit.distance > 0.3){
@@ -43,13 +42,15 @@ public class SuicideForObjects : MonoBehaviour
     void Update()
     {
 
-        if(Vector3.Distance(player.transform.position, this.transform.position) > 10 || timerOfDeath > Random.Range(500f, 1500f)){
+        if(!awayFromPlayer && Vector3.Distance(player.transform.position, this.transform.position) > 15 ){
         	player.GetComponent<CrownSpawner>().numSpawned--;
-    		Destroy(this.gameObject);
+            awayFromPlayer = true;
         }
         else{
         	timerOfDeath++;
-        	
+        	if(awayFromPlayer && timerOfDeath > Random.Range(500f, 1500f)){
+                Destroy(this.gameObject);
+            }
         }
     }
 }
