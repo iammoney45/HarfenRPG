@@ -196,6 +196,4 @@ public class EnemyScript : MonoBehaviour
         updatePosition();
         reachedDestination = false;
     }
-
-    public bool IsDead() { return dead; }
 }
