@@ -101,7 +101,7 @@ public class EnemyScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (player.GetComponent<PlayerController>().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("SwordAttack") &&
-        other.gameObject.tag == "Sword" && !player.GetComponent<PlayerController>().IsDead())
+        other.gameObject.tag == "Sword" && !player.GetComponent<PlayerController>().IsDead() && !dead)
         {
             Kill();
         }
