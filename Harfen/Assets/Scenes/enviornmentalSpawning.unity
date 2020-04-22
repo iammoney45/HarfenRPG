@@ -3633,7 +3633,7 @@ MonoBehaviour:
   mainCamera: {fileID: 274037115}
   waitForMagicTime: 0.95
   lineDestoryTime: 0.5
-  deathAnimTime: 0
+  deathAnimTime: 4
   lineRendererPrefab: {fileID: 1810947803}
 --- !u!136 &857624328
 CapsuleCollider:
@@ -5336,12 +5336,12 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
-  drawWeaponDistance: 0
-  attackDistance: 40
+  drawWeaponDistance: 25
+  attackDistance: 5
   swordAnimTime: 1.5
-  magicAnimTime: 0
-  clearAnimTime: 0
-  swordSlashAnimTime: 0
+  magicAnimTime: 1.5
+  clearAnimTime: 2
+  swordSlashAnimTime: 1.5
 --- !u!1 &1994538137 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 59715374794208231, guid: 4b112ceba15414fb7af6c2e8c55c7ddd,
