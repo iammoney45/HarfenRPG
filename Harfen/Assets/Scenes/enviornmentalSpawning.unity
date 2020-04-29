@@ -3055,7 +3055,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -790435773315590083, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
@@ -4994,7 +4994,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -790435773315590083, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
@@ -7038,7 +7038,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -790435773315590083, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
@@ -8523,6 +8523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 857624324}
+  playerCastLocation: {fileID: 0}
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
@@ -10042,6 +10043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 857624324}
+  playerCastLocation: {fileID: 0}
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
@@ -10661,6 +10663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 857624324}
+  playerCastLocation: {fileID: 0}
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
@@ -13607,6 +13610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 857624324}
+  playerCastLocation: {fileID: 0}
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
@@ -14474,6 +14478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 857624324}
+  playerCastLocation: {fileID: 1282618261}
   target: {x: 0, y: 0, z: 0}
   walkRadius: 25
   deathAnimTime: 3.45
@@ -15509,7 +15514,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -790435773315590083, guid: 4733fa029179c3f498fbe78f19d428ee,
         type: 3}

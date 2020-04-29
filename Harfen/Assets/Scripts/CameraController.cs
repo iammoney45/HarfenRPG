@@ -68,7 +68,6 @@ public class CameraController : MonoBehaviour
             Debug.DrawLine(transform.position, target.position, Color.green);
             if (wallHit.collider.tag != "Player" && wallHit.collider.tag != "Grass")
             {
-                print("Adjusting because of " + wallHit.collider.name);
                 transform.position = new Vector3(wallHit.point.x, wallHit.point.y, wallHit.point.z) + wallHit.normal;
             }
         }
