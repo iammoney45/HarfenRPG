@@ -44,7 +44,7 @@ public class CrownSpawner : MonoBehaviour
     	//spawny.GetComponent<SuicideForObjects>().player = PlayerTransform;
     	//spawny.GetComponent<SuicideForObjects>().daddyScript = this;
         float randScale = UnityEngine.Random.Range(4f, 10f);
-        //spawny.transform.localScale = new Vector3(randScale, randScale, randScale);
+        spawny.transform.localScale = new Vector3(randScale, randScale, randScale);
     	spawny.GetComponent<SuicideForObjects>().player = this.gameObject;
 
     }
