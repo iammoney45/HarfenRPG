@@ -7,6 +7,7 @@ public class EnemyScript : MonoBehaviour
 {
 
     public GameObject player;
+    public GameObject playerCastLocation;
 
     //for enemy AI
     public Vector3 target;
@@ -140,13 +141,12 @@ public class EnemyScript : MonoBehaviour
         if((player.GetComponent<Animator>().GetBool("HasSword") || player.GetComponent<Animator>().GetBool("HasMagic"))
             && Mathf.Abs((this.transform.position - player.transform.position).magnitude) < drawWeaponDistance)
         {
-            print("Raycasting");
             RaycastHit enemyCast;
-            Debug.DrawRay(middleOfBody.transform.position, player.transform.position, Color.green);
-            if (Physics.Linecast(middleOfBody.transform.position, player.transform.position, out enemyCast))
+            Debug.DrawLine(middleOfBody.transform.position, playerCastLocation.transform.position, Color.green);
+            if (Physics.Linecast(middleOfBody.transform.position, playerCastLocation.transform.position, out enemyCast))
             {
-                print("Hit: " + enemyCast.collider.tag);
-                if(enemyCast.collider.tag == "Player")
+                print("Hit: " + enemyCast.collider.name);
+                if(enemyCast.collider.tag == "Player" || enemyCast.collider.tag == "Sword")
                 {
                     return true;
                 }

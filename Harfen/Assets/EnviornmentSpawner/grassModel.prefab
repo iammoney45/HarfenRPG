@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1349563110547628542}
   - component: {fileID: 6937032678176542058}
   - component: {fileID: 3620683969164565879}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6682881922120053608}
   - component: {fileID: 1729666706326720199}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: grassModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,6 +135,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Particle System
+      objectReference: {fileID: 0}
+    - target: {fileID: 3664265735530939142, guid: e1ff3f12711e03a41bb1c2ee4afe5818,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6625759273279207871, guid: e1ff3f12711e03a41bb1c2ee4afe5818,
         type: 3}
