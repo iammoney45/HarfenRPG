@@ -6129,7 +6129,7 @@ MonoBehaviour:
   cameraRotateSpeed: 10
   pivot: {fileID: 1012048287}
   maxViewAngle: 50
-  minViewAngle: -50
+  minViewAngle: -20
   lookAtTarget: {fileID: 1282618262}
 --- !u!1001 &286921972
 PrefabInstance:
