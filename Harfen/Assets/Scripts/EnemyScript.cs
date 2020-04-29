@@ -18,6 +18,7 @@ public class EnemyScript : MonoBehaviour
     public float magicAnimTime;
     public float clearAnimTime;
     public float swordSlashAnimTime;
+    public GameObject middleOfBody;
 
     private NavMeshAgent agent;
     private bool reachedDestination = false;
@@ -139,12 +140,19 @@ public class EnemyScript : MonoBehaviour
         if((player.GetComponent<Animator>().GetBool("HasSword") || player.GetComponent<Animator>().GetBool("HasMagic"))
             && Mathf.Abs((this.transform.position - player.transform.position).magnitude) < drawWeaponDistance)
         {
-            return true;
+            print("Raycasting");
+            RaycastHit enemyCast;
+            Debug.DrawRay(middleOfBody.transform.position, player.transform.position, Color.green);
+            if (Physics.Linecast(middleOfBody.transform.position, player.transform.position, out enemyCast))
+            {
+                print("Hit: " + enemyCast.collider.tag);
+                if(enemyCast.collider.tag == "Player")
+                {
+                    return true;
+                }
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     //wait for death animation before destroying

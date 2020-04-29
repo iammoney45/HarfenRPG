@@ -39,9 +39,13 @@ public class CrownSpawner : MonoBehaviour
     	NewPos.z += posZ;
     	NewPos.y += 5;
     	//print(NewPos);
-    	GameObject spawny = Instantiate(spawn, NewPos, Quaternion.Euler(new Vector3(0,0,0)));
+        float randRotation = UnityEngine.Random.Range(0f, 360f);
+    	GameObject spawny = Instantiate(spawn, NewPos, Quaternion.Euler(new Vector3(0,randRotation,0)));
     	//spawny.GetComponent<SuicideForObjects>().player = PlayerTransform;
     	//spawny.GetComponent<SuicideForObjects>().daddyScript = this;
+        float randScale = UnityEngine.Random.Range(4f, 10f);
+        spawny.transform.localScale = new Vector3(randScale, randScale, randScale);
     	spawny.GetComponent<SuicideForObjects>().player = this.gameObject;
+
     }
 }
